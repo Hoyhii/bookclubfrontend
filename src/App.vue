@@ -1,18 +1,65 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" class="container">
+    <header>
+      <h1>Petrik Könyvklub</h1>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#newMember">Új tag felvétele</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://petrik.hu">Petrik honlap</a>
+        </li>
+      </ul>
+  </div>
+</nav>
+<main class="row">
+    <MemberItem
+    class="col-12 col-md-6 col-xl-4" 
+    v-for="member in members" 
+    v-bind:key="member.id" 
+    :member="member"
+    
+    />
+    <MemberForm id="newmember"
+    @newmember="Reload"/>
+</main>
+
+
+    
+    <footer>Készítette: Zsálek Norbert</footer>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import MemberItem from './components/MemberItem.vue'
+import MemberForm from './components/MemberForm.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    MemberItem,
+    MemberForm
+  },
+  data() {
+        return {
+            members:[
+              
+            ]
+        }
+    },
+    methods: {
+      async Reload() {
+        let Response = await fetch('http://127.0.0.1:8000/api/members')
+        let data = await Response.json()
+        this.members = data.data
+      }
+    },
+    async mounted() {
+      this.Reload()
+    },
 }
 </script>
 
